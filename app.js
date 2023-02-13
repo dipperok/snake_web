@@ -1,4 +1,6 @@
 const board = document.querySelector('#board')
+const score_ = document.querySelector('#score')
+
 const SQUARES_NUMBER = 20 ** 2
 const colors = ['#8D4E7B', '#CE834A', 'pink', '#9193CE', '#87CE85', '#79CEC7', '#CECA4D', '#91CE93']
 const red_color = '#EB2C2F'
@@ -17,12 +19,11 @@ const config = {
 }
 
 const snake = {
-    x: 10
-    ,
+    x: 10,
     y: 10,
     dx: 1,
     dy: 0,
-    tails: [],
+    tails: [[10, 10], [9, 10], [8, 10]],
     maxTails: 3
 }
 
@@ -31,9 +32,6 @@ let apple = {
     y: 16
 }
 
-let vectors = []
-
-let player_body = []
 
 for (let i = 0; i < SQUARES_NUMBER; i++) {
     const square = document.createElement('div')
@@ -53,28 +51,36 @@ const allSquares = document.querySelectorAll('.square')
 
 function main() {
     spawn_apple()
+    fixed_update()
     update()
     const start_game = setInterval(() => {
         console.log('After timeout')
-        spawn_player()
+        spawn_player(snake.x, snake.y)
         snakeMove(snake.x, snake.y)
+        tails(snake.tails)
     },300)
     const clear_game = setInterval(() => {
         //for (let i = 0; i < SQUARES_NUMBER; i++) {
         //    setTimeout(removeColor(allSquares[i]), 1000000) 
         //}
         //spawn_apple()
-    },400)
+    }, 400)
 }
 function update() {
     const update = setInterval(() => {
         get_apple()
-    }, 50)
+    }, 50
+    )
+}
+
+function fixed_update() {
+    const update = setInterval(() => {
+        reload()
+    }, 300
+    )
 }
 
 function snakeMove(x, y) {
-    
-
     if ((snake.dx === 1 && snake.dy === 0) ) { 
         snake.x += 1
     }
@@ -100,7 +106,6 @@ function snakeMove(x, y) {
     if (snake.y === 0){
         snake.y = 20
     }
-    //setTimeout(setColor(allSquares[getPoint(x, y)], red_color), 1000);
 }
 
 function moveLeft() {
@@ -141,6 +146,11 @@ function moveRight() {
     }
 }
 
+function tails(tails) {
+    console.log(tails)
+    
+}
+
 function setColor(element, color) {
     element.style.backgroundColor = color
     element.style.boxShadow = `0 0 2px ${color}, 0 0 20px ${color}`
@@ -151,9 +161,17 @@ function removeColor(element) {
     element.style.boxShadow = `0 0 2px #000` 
 }
 
-function destroy(x, y) {
+function destroy(x = snake.x, y = snake.y) {
     allSquares[getPoint(x, y)].style.backgroundColor = '#1d1d1d'
     allSquares[getPoint(x, y)].style.boxShadow = `0 0 2px #000` 
+}
+
+function reload() {
+    for (let i = 0; i < SQUARES_NUMBER; i++) {
+        if (i != getPoint(snake.x, snake.y) && i != getPoint(apple.x, apple.y)) {
+            removeColor(allSquares[i])
+        }
+    }
 }
 
 function randomNumber(min = 0, max = 1) {
@@ -176,8 +194,10 @@ function spawn_apple() {
     setColor(allSquares[getPoint(apple_coor_x, apple_coor_y)], red_color)
 }
 
-function spawn_player() {
-    setColor(allSquares[getPoint(snake.x, snake.y)], green_head)
+function spawn_player(x = snake.x, y = snake.y) {
+    console.log(`up: ${snake.x}, ${snake.y}}`)
+    setColor(allSquares[getPoint(x, y)], green_head)
+    
 }
 
 function get_apple() {
@@ -193,8 +213,13 @@ function get_apple() {
 
 function give_score(num) {
     score += 1
+    score_.textContent = score;
 }
 
+function lose() {
+    snake.dx = 0
+    snake.dy = 0
+}
 
 
 main()
