@@ -1,8 +1,11 @@
+@import url('PIXEL.TTF');
+
 * {
   box-sizing: border-box;
 }
 
 body {
+  
   background-color: #111;
   display: flex;
   align-items: center;
@@ -26,9 +29,27 @@ body {
   background-color: #1d1d1d;
   margin: 2px;
   box-shadow: 0 0 2px #000;
-  transition: 2.5s ease;
+  transition: 0.1s ease;
 }
 
 .square:hover {
   transition-duration: 0s;
+}
+
+.btns-block {
+  display: block;
+}
+
+.btn {
+  border-radius: 10px;
+  height: 50px;
+  width: 50px;
+  background: #4C822F;
+  font-weight: 900;
+  
+}
+
+.score {
+  color: #ffffff;
+
 }
